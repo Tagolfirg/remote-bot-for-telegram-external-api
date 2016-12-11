@@ -9,10 +9,6 @@ Add to dependencies
 compile 'com.alexandershtanko.remotebotexternalapi:remotebotexternalapi:1.0.2'
 
 ```
-Add permission to AndroidManifest
-```
-<uses-permission android:name="com.alexandershtanko.androidtelegrambot.EXTERNAL_ACCESS"/>
-```
 
 ### 1. Send Location
 ```Java
