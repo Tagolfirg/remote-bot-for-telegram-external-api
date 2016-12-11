@@ -1,0 +1,113 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+
+
+
+android {
+    lintOptions {
+        abortOnError false
+    }
+
+    compileSdkVersion 23
+    buildToolsVersion "23.0.3"
+
+    defaultConfig {
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+group='com.alexandershtanko.remotebotexternalapi'
+
+ext {
+    bintrayRepo = 'rbapi'
+    bintrayName = 'remote-bot-for-telegram-external-api'   // Has to be same as your library module name
+
+    publishedGroupId = 'com.alexandershtanko.remotebotexternalapi'
+    libraryName = 'Remote Bot for Telegram External API'
+    artifact = 'remotebotexternalapi'     // Has to be same as your library module name
+
+    libraryDescription = 'Remote Bot for Telegram External API'
+    // Your github repo link
+    siteUrl = 'https://github.com/AlexanderShtanko/Remote-Bot-for-Telegram-External-Api'
+    gitUrl = 'https://github.com/AlexanderShtanko/Remote-Bot-for-Telegram-External-Api.git'
+    githubRepository= 'AlexanderShtanko/Remote-Bot-for-Telegram-External-Api'
+
+    libraryVersion = '1.0.2'
+
+    developerId = 'alexandershtanko'
+    developerName = 'Alexander Shtanko'
+    developerEmail = 'alexjcomp@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+apply from: 'https://raw.githubusercontent.com/nisrulz/JCenter/master/installv1.gradle'
+
+
+apply plugin: 'com.jfrog.bintray'
+
+version = libraryVersion
+
+if (project.hasProperty("android")) { // Android libraries
+    task sourcesJar(type: Jar) {
+        classifier = 'sources'
+        from android.sourceSets.main.java.srcDirs
+    }
+
+    task javadoc(type: Javadoc) {
+        source = android.sourceSets.main.java.srcDirs
+        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    }
+} else { // Java libraries
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+// Bintray
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+
+    configurations = ['archives']
+    pkg {
+        repo = bintrayRepo
+        name = bintrayName
+        version {
+            name = libraryVersion
+            desc = libraryDescription
+
+        }
+    }
+}
+
+
