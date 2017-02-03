@@ -1,5 +1,5 @@
 # Remote Bot for Telegram External Api
-External API for Remote Bot for Telegram Android
+External API for Remote Bot for Telegram Android (https://remote-bot.com)
 
 ### How to add library to your project
 Gradle
